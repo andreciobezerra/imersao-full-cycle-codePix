@@ -14,11 +14,11 @@ func init() {
 
 type PixKey struct {
 	Base      `valid:"required"`
-	Kind      string   `json:"kind" valid:"notnull"`
-	Key       string   `json:"key" valid:"notnull"`
+	Kind      string   `json:"kind" gorm:"type:varchar(20)" valid:"notnull"`
+	Key       string   `json:"key" gorm:"type:varchar(255)" valid:"notnull"`
 	Account   *Account `valid:"-"`
-	AccountID string   `valid:"-"`
-	Status    string   `json:"status" valid:""notnull`
+	AccountID string   `gorm:"column:account_id;type:uuid;not null" valid:"-"`
+	Status    string   `json:"status" gorm:"type:varchar(20)" valid:"notnull"`
 }
 
 func (p *PixKey) isValid() error {
@@ -47,7 +47,7 @@ func NewPixKey(kind string, account *Account, key string) (*PixKey, error) {
 	err := pixKey.isValid()
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	return &pixKey, nil
